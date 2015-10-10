@@ -3,7 +3,7 @@ import pyorient
 import sys
 
 client = pyorient.OrientDB("localhost", 2424)
-session_id = client.connect("root", "admin")
+session_id = client.connect("root", "1111")
 db_name = "soufun"
 db_username = "admin"
 db_password = "admin"
@@ -15,11 +15,10 @@ else:
 	print "database [" + db_name + "] does not exist! session ending..."
 	sys.exit()
 
-lat1 = 22.532498
-lat2 = 22.552317
-
-lng1 = 114.044329
-lng2 = 114.076644
+lat1 = 22.533113
+lat2 = 22.556300
+lng1 = 114.038299
+lng2 = 114.084304
 
 query = 'SELECT FROM Listing WHERE latitude BETWEEN {} AND {} AND longitude BETWEEN {} AND {}'
 
@@ -29,21 +28,24 @@ numListings = len(records)
 
 print 'received ' + str(numListings) + ' records'
 
-# [ANALYZE THE RETURNED RECORDS TO DETERMINE THE MINIMUM, MAXIMUM, AND AVERAGE PRICE OF THE LISTINGS]
-# Hint: the loop that you need to look into each record is already provided below.
-# To find the average price, add up all the prices and divide by the number of results
-# To find the minimum price, create a variable and initialize it to a very large number, 
-# then test each price to see if it is smaller than the current minimum. If it is, update 
-# the minimum variable with that price. You can do something similar to find the maximum.
+totalPrice = 0
+minPrice = 999999
+maxPrice = 100
 
 for record in records:
 	print record.price
+    
+        totalPrice += record.price
+        averagePrice = totalPrice / numListings
 
+        if record.price < minPrice:
+            minPrice = record.price
 
-# [PRINT OUT THE RESULTING VALUES BY CONCATENATING THEM TO THESE LINES TO CHECK YOUR WORK]
+        if record.price > maxPrice:
+            maxPrice = record.price
 
-print 'min price: '
-print 'max price: ' 
-print 'average price: '
+print 'min price: ' + str(minPrice)
+print 'max price: ' + str(maxPrice)
+print 'average price: ' + str(averagePrice)
 
 client.db_close()
